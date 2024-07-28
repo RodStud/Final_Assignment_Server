@@ -1,0 +1,6 @@
+.idea/
+docker/mariadb/data/
+docker/pgadmin/
+docker/mssql/
+logs/
+node_modules/
