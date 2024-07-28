@@ -15,5 +15,19 @@ exports.user_controller = {
         } catch (error) {
             return 401;
         }
-    }
+    },
+
+    async get_user(data) {
+        try {
+            let result = await db_controller.sql_execute(`
+                SELECT *
+                FROM tbl_118_user AS u
+                         INNER JOIN tbl_118_role AS r ON u.role_id = r.id
+                WHERE u.id = ${data.user_id}
+            `);
+            return result;
+        } catch (error) {
+            return 400;
+        }
+    },
 };
