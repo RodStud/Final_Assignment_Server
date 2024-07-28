@@ -16,6 +16,12 @@ app.post("/login", async function (request, response) {
     return response.json(result);
 });
 
+app.post("/patient_add", async function (request, response) {
+    let result = await user_controller.create_child(request.body);
+    if (result == 400) {return response.status(400).send("Incorrect login or password");}
+    return response.status(400).send("Incorrect or incomplete data");
+});
+
 app.listen(port, host, () => {
     console.log(`Server listens http://${host}:${port}`);
 });
