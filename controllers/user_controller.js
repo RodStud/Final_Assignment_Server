@@ -43,5 +43,20 @@ exports.user_controller = {
         } catch (error) {
             return 400;
         }
+    },
+
+    async create_patient(data) {
+        try {
+            result = await db_controller.sql_execute(`
+                INSERT INTO tbl_118_patient (user_id, birthday, age, hmo, medical_condition, hospital_duration)
+                VALUES (${data.user_id}, "${data.birthday}",
+                        TIMESTAMPDIFF(YEAR, '${data.birthday}', CURDATE()),
+                        "${data.hmo}", "${data.medical_condition}",
+                        ${data.hospital_duration})
+            `);
+            return 200;
+        } catch (error) {
+            return 400;
+        }
     }
 };
