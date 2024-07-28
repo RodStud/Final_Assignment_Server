@@ -72,5 +72,21 @@ exports.user_controller = {
         }
     },
 
-    
+    async create_child(data) {
+        try {
+            let result = await this.create_user(data.child);
+            result = await this.create_patient(data.child);
+            if (data.parent_1 != null) {
+                result = await this.create_user(data.parent_1);
+                result = await this.connect_child_to_parent(data.child.user_id, data.parent_1.user_id);
+            }
+            if (data.parent_2 != null) {
+                result = await this.create_user(data.parent_2);
+                result = await this.connect_child_to_parent(data.child.user_id, data.parent_2.user_id);
+            }
+            return 200;
+        } catch (error) {
+            return 400;
+        }
+    }
 };
