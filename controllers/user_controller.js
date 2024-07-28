@@ -30,4 +30,18 @@ exports.user_controller = {
             return 400;
         }
     },
+
+    async create_user(data) {
+        try {
+            let result = await db_controller.sql_execute(`
+                INSERT INTO tbl_118_user (login, password, first_name, last_name, telephone, email, role_id)
+                VALUES ("${data.login}", "${data.password}", "${data.first_name}",
+                        "${data.last_name}", "${data.telephone}", "${data.email}",
+                        ${data.role_id})
+            `);
+            return 200;
+        } catch (error) {
+            return 400;
+        }
+    }
 };
