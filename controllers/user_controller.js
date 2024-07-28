@@ -47,7 +47,7 @@ exports.user_controller = {
 
     async create_patient(data) {
         try {
-            result = await db_controller.sql_execute(`
+            let result = await db_controller.sql_execute(`
                 INSERT INTO tbl_118_patient (user_id, birthday, age, hmo, medical_condition, hospital_duration)
                 VALUES (${data.user_id}, "${data.birthday}",
                         TIMESTAMPDIFF(YEAR, '${data.birthday}', CURDATE()),
@@ -58,5 +58,19 @@ exports.user_controller = {
         } catch (error) {
             return 400;
         }
-    }
+    },
+
+    async connect_child_to_parent(child_id, parent_id) {
+        try {
+            let result = await db_controller.sql_execute(`
+                INSERT INTO tbl_118_parent (parent_id, child_id)
+                VALUES (${parent_id}, ${child_id})
+            `);
+            return 200;
+        } catch (error) {
+            return 400;
+        }
+    },
+
+    
 };
