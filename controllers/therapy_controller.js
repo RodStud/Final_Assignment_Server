@@ -2,7 +2,7 @@ const {db_controller} = require("./db_controller");
 
 exports.therapy_controller = {
 
-    async get_patient_list(user_id) {
+    async get_patient_list(data) {
         try {
             let result = await db_controller.sql_execute(`
                 SELECT p.id,
@@ -16,7 +16,7 @@ exports.therapy_controller = {
                          INNER JOIN tbl_118_user AS u ON p.user_id = u.id
                 WHERE p.user_id IN (SELECT patient_id
                                     FROM tbl_118_therapy
-                                    WHERE tbl_118_therapy.doctor_id = '${user_id}')
+                                    WHERE tbl_118_therapy.doctor_id = '${data.user_id}')
             `);
             return result;
         } catch (error) {
@@ -87,13 +87,33 @@ exports.therapy_controller = {
     },
 
     async get_therapy_list(data) {
-        let result = await db_controller.sql_execute(`
-            SELECT id AS therapy_id, therapy_type
-            FROM tbl_118_therapy
-            WHERE doctor_id = ${data.doctor_id}
-              AND patient_id = ${data.patient_id}
-        `);
-        return result;
+        try {
+            let result = await db_controller.sql_execute(`
+                SELECT id AS therapy_id, therapy_type
+                FROM tbl_118_therapy
+                WHERE doctor_id = ${data.doctor_id}
+                  AND patient_id = ${data.patient_id}
+            `);
+            return result;
+        } catch (error) {
+            return 400;
+        }
     },
+
+    async get_physical_info(therapy_id) {
+        try {
+            let result = await db_controller.sql_execute(`
+                SELECT s.therapy_id, s.session_number, s.date, p.*
+                FROM tbl_118_therapy AS t
+                         INNER JOIN tbl_118_session AS s ON t.id = s.therapy_id
+                         INNER JOIN tbl_118_p_characteristic AS p ON p.id = s.id
+                WHERE t.id = ${therapy_id}
+                  AND s.session_number = t.session_counter;
+            `);
+            return result[0];
+        } catch (error) {
+            return 400;
+        }
+    }
 
 };
