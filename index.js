@@ -45,6 +45,14 @@ app.get("/patient_list", async function (request, response) {
     return response.json(patient_list);
 });
 
+app.get("/therapy", async function (request, response) {
+    let therapy = await therapy_controller.get_therapy(request.body);
+    if (therapy == 400) {
+        return response.status(400).send("Wrong therapy or session ID");
+    }
+    return response.json(therapy);
+});
+
 app.listen(port, host, () => {
     console.log(`Server listens http://${host}:${port}`);
 });
