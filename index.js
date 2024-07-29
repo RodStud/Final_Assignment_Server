@@ -4,6 +4,7 @@ const express = require("express");
 const app = express();
 
 const {user_controller} = require('./controllers/user_controller.js');
+const {therapy_controller} = require("./controllers/therapy_controller");
 
 const host = process.env.HOST || "0.0.0.0";
 const port = process.env.PORT || 5000;
