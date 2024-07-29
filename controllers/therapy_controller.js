@@ -86,4 +86,14 @@ exports.therapy_controller = {
         }
     },
 
+    async get_therapy_list(data) {
+        let result = await db_controller.sql_execute(`
+            SELECT id AS therapy_id, therapy_type
+            FROM tbl_118_therapy
+            WHERE doctor_id = ${data.doctor_id}
+              AND patient_id = ${data.patient_id}
+        `);
+        return result;
+    },
+
 };
