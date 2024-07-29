@@ -18,8 +18,14 @@ app.post("/login", async function (request, response) {
 
 app.post("/patient_add", async function (request, response) {
     let result = await user_controller.create_child(request.body);
-    if (result == 400) {return response.status(400).send("Incorrect login or password");}
-    return response.status(400).send("Incorrect or incomplete data");
+    if (result == 400) {return response.status(400).send("Incorrect or incomplete data");}
+    return response.status(200).send("OK");
+});
+
+app.get("/patient_list", async function (request, response) {
+    let patient_list = await therapy_controller.get_patient_list(request.body.user_id);
+    if (result == 400) {return response.status(400).send("Wrong user ID");}
+    return response.json(patient_list);
 });
 
 app.listen(port, host, () => {
