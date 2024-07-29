@@ -25,7 +25,7 @@ app.post("/patient_add", async function (request, response) {
 
 app.get("/patient_list", async function (request, response) {
     let patient_list = await therapy_controller.get_patient_list(request.body.user_id);
-    if (result == 400) {return response.status(400).send("Wrong user ID");}
+    if (patient_list == 400) {return response.status(400).send("Wrong user ID");}
     return response.json(patient_list);
 });
 
