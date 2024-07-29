@@ -18,9 +18,11 @@ app.post("/login", async function (request, response) {
 });
 
 app.get("/patient", async function (request, response) {
-    let patient = await therapy_controller.get_patient(request.body);
-    if (patient == 400) {return response.status(400).send("Wrong doctor or patient ID");}
-    return response.json(patient);
+    let result = {};
+    result.patient = await therapy_controller.get_patient(request.body);
+    result.therapy_list = await therapy_controller.get_therapy_list(request.body);
+    if (result.patient == 400 || result.therapy_list == 400) {return response.status(400).send("Wrong doctor or patient ID");}
+    return response.json(result);
 });
 
 app.post("/patient_add", async function (request, response) {
