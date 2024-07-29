@@ -129,4 +129,14 @@ exports.therapy_controller = {
         return result;
     },
 
+    async get_therapy(data) {
+        try {
+            let therapy = {};
+            therapy.physical_info = await this.get_physical_info(data.therapy_id);
+            therapy.games_progress = await this.get_games_progress(data.session_id);
+            return therapy;
+        } catch (error) {
+            return 400;
+        }
+    }
 };
