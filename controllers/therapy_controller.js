@@ -25,24 +25,25 @@ exports.therapy_controller = {
     },
 
     async get_patient(data) {
-        let temp_result;
-        let result  = {};
-        temp_result = await db_controller.sql_execute(`
+        try {
+            let temp_result;
+            let result  = {};
+            temp_result = await db_controller.sql_execute(`
             SELECT p.id, p.age, u.login, u.first_name, u.last_name
             FROM tbl_118_patient AS p
                      INNER JOIN tbl_118_user AS u ON p.id = u.id
             WHERE p.id = ${data.patient_id}
         `);
-        result.patient = temp_result[0];
-        temp_result = await db_controller.sql_execute(`
+            result.patient = temp_result[0];
+            temp_result = await db_controller.sql_execute(`
             SELECT u.id, u.first_name, u.last_name, u.email, u.telephone
             FROM tbl_118_parent AS p
                      INNER JOIN tbl_118_user AS u ON p.parent_id = u.id
             WHERE p.child_id = ${data.patient_id}; 
         `);
-        result.parent_1 = temp_result[0];
-        result.parent_2 = temp_result[1];
-        temp_result = await db_controller.sql_execute(`
+            result.parent_1 = temp_result[0];
+            result.parent_2 = temp_result[1];
+            temp_result = await db_controller.sql_execute(`
             SELECT FORMAT(tp.total_progress * 100, 1)                            AS total_progress,
                    tp.attendance,
                    tp.total_attendance,
@@ -57,8 +58,8 @@ exports.therapy_controller = {
                      INNER JOIN tbl_118_therapy_progress AS tp ON t.id = tp.therapy_id
             WHERE t.patient_id = ${data.patient_id};
         `);
-        result.therapy_progress = temp_result[0];
-        temp_result = await db_controller.sql_execute(`
+            result.therapy_progress = temp_result[0];
+            temp_result = await db_controller.sql_execute(`
             SELECT *
             FROM tbl_118_session AS s
             WHERE s.therapy_id = (SELECT t.id
@@ -66,15 +67,18 @@ exports.therapy_controller = {
                                   WHERE t.patient_id = ${data.patient_id})
               AND s.session_number > (SELECT t.session_counter FROM tbl_118_therapy AS t WHERE t.patient_id = ${data.patient_id});
         `);
-        result.schedule = temp_result[0];
-        result.requests = await db_controller.sql_execute(`
+            result.schedule = temp_result[0];
+            result.requests = await db_controller.sql_execute(`
             SELECT r.id, r.game_id, r.title, r.content
             FROM tbl_118_request AS r
             WHERE r.recipient_id = ${data.doctor_id}
               AND r.sender_id = (SELECT user_id FROM tbl_118_patient WHERE id = ${data.patient_id})
               AND r.status = "No Reply";
         `);
-        return result;
+            return result;
+        } catch (error) {
+            return 400;
+        }
     },
 
 };

@@ -17,6 +17,12 @@ app.post("/login", async function (request, response) {
     return response.json(result);
 });
 
+app.get("/patient", async function (request, response) {
+    let patient = await therapy_controller.get_patient(request.query.patient_id, request.session.user_id);
+    if (patient == 400) {return response.status(400).send("Wrong patient ID");}
+    return response.json(patient_list);
+});
+
 app.post("/patient_add", async function (request, response) {
     let result = await user_controller.create_child(request.body);
     if (result == 400) {return response.status(400).send("Incorrect or incomplete data");}
