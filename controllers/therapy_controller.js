@@ -101,19 +101,32 @@ exports.therapy_controller = {
     },
 
     async get_physical_info(therapy_id) {
-        try {
-            let result = await db_controller.sql_execute(`
-                SELECT s.therapy_id, s.session_number, s.date, p.*
-                FROM tbl_118_therapy AS t
-                         INNER JOIN tbl_118_session AS s ON t.id = s.therapy_id
-                         INNER JOIN tbl_118_p_characteristic AS p ON p.id = s.id
-                WHERE t.id = ${therapy_id}
-                  AND s.session_number = t.session_counter;
-            `);
-            return result[0];
-        } catch (error) {
-            return 400;
-        }
-    }
+        let result = await db_controller.sql_execute(`
+            SELECT s.therapy_id, s.session_number, s.date, p.*
+            FROM tbl_118_therapy AS t
+                     INNER JOIN tbl_118_session AS s ON t.id = s.therapy_id
+                     INNER JOIN tbl_118_p_characteristic AS p ON p.id = s.id
+            WHERE t.id = ${therapy_id}
+              AND s.session_number = t.session_counter;
+        `);
+        return result[0];
+    },
+
+    async get_games_progress(session_id) {
+        let result = await db_controller.sql_execute(`
+            SELECT g.*,
+                   FORMAT(gp.game_progress * 100, 1)                        AS game_progress,
+                   FORMAT(gp.achievement_progress * 100, 1)                 AS achievement_progress,
+                   FORMAT(gp.personal_result, 1)                            AS personal_result,
+                   FORMAT(gp.total_progress * 100, 1)                       AS total_progress,
+                   FORMAT(gp.total_achievements * 100, 1)                   AS total_achievements,
+                   FORMAT(gp.total_result, 1)                               AS total_result,
+                   FORMAT((gp.total_result / g.average_score - 1) * 100, 1) AS result_diff
+            FROM tbl_118_game_progress AS gp
+                     INNER JOIN tbl_118_game AS g ON g.id = gp.game_id
+            WHERE gp.session_id = ${session_id};
+        `);
+        return result;
+    },
 
 };
