@@ -20,7 +20,7 @@ app.post("/login", async function (request, response) {
 app.get("/patient", async function (request, response) {
     let patient = await therapy_controller.get_patient(request.query.patient_id, request.session.user_id);
     if (patient == 400) {return response.status(400).send("Wrong patient ID");}
-    return response.json(patient_list);
+    return response.json(patient);
 });
 
 app.post("/patient_add", async function (request, response) {
