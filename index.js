@@ -18,8 +18,8 @@ app.post("/login", async function (request, response) {
 });
 
 app.get("/patient", async function (request, response) {
-    let patient = await therapy_controller.get_patient(request.query.patient_id, request.session.user_id);
-    if (patient == 400) {return response.status(400).send("Wrong patient ID");}
+    let patient = await therapy_controller.get_patient(request.body);
+    if (patient == 400) {return response.status(400).send("Wrong doctor or patient ID");}
     return response.json(patient);
 });
 
