@@ -20,12 +20,8 @@ app.use(session({
     secret: secret,
     cookie: {
         secure: true,
-        httpOnly: true,
-        sameSite: 'lax',
         maxAge: 1000 * 60 * 60 * 24
-    },
-    resave: false,
-    saveUninitialized: false
+    }
 }));
 
 app.use((request, response, next) => {
