@@ -2,19 +2,15 @@ require('dotenv').config();
 
 const express = require("express");
 const session = require("express-session");
-const cookieParser = require("cookie-parser");
-const RedisStore = require('connect-redis')(session);
+const RedisStore = require('connect-redis').default;
 const redis = require('redis');
-const app = express();
-
+const cookieParser = require("cookie-parser");
 
 const {user_controller} = require('./controllers/user_controller.js');
 const {therapy_controller} = require("./controllers/therapy_controller");
 
 const host = process.env.HOST || "0.0.0.0";
 const port = process.env.PORT || 5000;
-
-app.use(express.json());
 
 const redisClient = redis.createClient({
     url: 'redis://red-cqm2r4hu0jms73fkkhh0:6379'
@@ -23,6 +19,8 @@ const redisClient = redis.createClient({
 redisClient.on('error', (err) => {
     console.error('Redis error: ', err);
 });
+
+const app = express();
 
 let secret = 'JKirjes998ifds4k';
 app.use(cookieParser(secret));
@@ -36,6 +34,8 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24
     }
 }));
+
+app.use(express.json());
 
 app.use((request, response, next) => {
     response.set({
