@@ -16,6 +16,10 @@ const redisClient = redis.createClient({
     url: 'redis://red-cqm2r4hu0jms73fkkhh0:6379'
 });
 
+redisClient.connect().catch(err => {
+    console.error('Redis connection error:', err);
+});
+
 redisClient.on('error', (err) => {
     console.error('Redis error: ', err);
 });
