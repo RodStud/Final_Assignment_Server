@@ -34,23 +34,12 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: true,
+        secure: false,
         maxAge: 1000 * 60 * 60 * 24
     }
 }));
 
 app.use(express.json());
-
-app.use((request, response, next) => {
-    response.set({
-        'Access-Control-Allow-Origin': 'https://se.shenkar.ac.il',
-        'Access-Control-Allow-Credentials': 'true',
-        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
-        'Content-Type': 'application/json'
-    });
-    next();
-});
 
 const cors = require('cors');
 
