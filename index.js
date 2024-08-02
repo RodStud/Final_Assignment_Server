@@ -44,7 +44,8 @@ app.use(express.json());
 const cors = require('cors');
 
 app.use(cors({
-    origin: 'http://se.shenkar.ac.il',
+    origin: ['http://se.shenkar.ac.il', 'https://se.shenkar.ac.il'],
+    default: 'http://se.shenkar.ac.il',
     credentials: true
 }));
 
