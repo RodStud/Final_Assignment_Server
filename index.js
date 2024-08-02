@@ -26,7 +26,7 @@ app.use(session({
 
 app.use((request, response, next) => {
     response.set({
-        'Access-Control-Allow-Origin': 'http://se.shenkar.ac.il/',
+        'Access-Control-Allow-Origin': 'http://se.shenkar.ac.il',
         'Access-Control-Allow-Credentials': 'true',
         'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
@@ -38,7 +38,7 @@ app.use((request, response, next) => {
 const cors = require('cors');
 
 app.use(cors({
-    origin: 'http://se.shenkar.ac.il/',
+    origin: 'http://se.shenkar.ac.il',
     credentials: true
 }));
 
