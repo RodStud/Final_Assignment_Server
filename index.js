@@ -3,6 +3,8 @@ require('dotenv').config();
 const express = require("express");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const RedisStore = require('connect-redis')(session);
+const redis = require('redis');
 const app = express();
 
 
@@ -14,10 +16,21 @@ const port = process.env.PORT || 5000;
 
 app.use(express.json());
 
+const redisClient = redis.createClient({
+    url: 'redis://red-cqm2r4hu0jms73fkkhh0:6379'
+});
+
+redisClient.on('error', (err) => {
+    console.error('Redis error: ', err);
+});
+
 let secret = 'JKirjes998ifds4k';
 app.use(cookieParser(secret));
 app.use(session({
+    store: new RedisStore({ client: redisClient }),
     secret: secret,
+    resave: false,
+    saveUninitialized: false,
     cookie: {
         secure: true,
         maxAge: 1000 * 60 * 60 * 24
